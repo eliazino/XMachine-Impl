@@ -1,0 +1,159 @@
+﻿{
+  "Project": {
+    "name": "ATMMachine",
+    "typeIstatic": false,
+    "constructorValue": "new List<Account>(){new Account(\"1\"), new Account(\"6\")}"
+  },
+  "State": {
+    "type": "SYSTEM_STATUS",
+    "values": "IDLE, SESSION_START, WITHDRAWAL, CHECK_BALANCE, DEPOSIT, TRANSFER, NONE",
+    "memoryName": "status",
+    "initialValue": "IDLE"
+  },
+  "Functions": [
+    {
+      "name": "Authenticate",
+      "args": [
+        {
+          "name": "account",
+          "type": "Account"
+        }
+      ],
+      "output": "void"
+    },
+    {
+      "name": "Withdraw",
+      "args": [
+        {
+          "name": "amount",
+          "type": "double"
+        }
+      ],
+      "output": ""
+    },
+    {
+      "name": "CheckBalance",
+      "args": [
+      ],
+      "output": "double"
+    },
+    {
+      "name": "Deposit",
+      "args": [
+        {
+          "name": "amount",
+          "type": "double"
+        }
+      ],
+      "output": "void"
+    },
+    {
+      "name": "Cancel",
+      "args": [
+      ],
+      "output": "void"
+    },
+    {
+      "name": "Accept",
+      "args": [
+      ],
+      "output": "void"
+    }
+  ],
+  "Transitions": [
+    {
+      "from": "IDLE",
+      "function": "Authenticate",
+      "to": "SESSION_START"
+    },
+    {
+      "from": "SESSION_START",
+      "function": "Withdraw",
+      "to": "WITHDRAWAL"
+    },
+    {
+      "from": "SESSION_START",
+      "function": "CheckBalance",
+      "to": "CHECK_BALANCE"
+    },
+    {
+      "from": "SESSION_START",
+      "function": "Deposit",
+      "to": "DEPOSIT"
+    },
+    {
+      "from": "SESSION_START",
+      "function": "Cancel",
+      "to": "IDLE"
+    },
+    {
+      "from": "WITHDRAWAL",
+      "function": "Cancel",
+      "to": "IDLE"
+    },
+    {
+      "from": "WITHDRAWAL",
+      "function": "Accept",
+      "to": "SESSION_START"
+    },
+    {
+      "from": "CHECK_BALANCE",
+      "function": "Cancel",
+      "to": "IDLE"
+    },
+    {
+      "from": "CHECK_BALANCE",
+      "function": "Accept",
+      "to": "SESSION_START"
+    },
+    {
+      "from": "DEPOSIT",
+      "function": "Cancel",
+      "to": "IDLE"
+    },
+    {
+      "from": "DEPOSIT",
+      "function": "Accept",
+      "to": "SESSION_START"
+    }
+  ],
+  "TestParameters": [
+    {
+      "function": "Authenticate",
+      "withParameter": [ "\"4\"" ],
+      "should": {
+        "throw": "true"
+      }
+    },
+    {
+      "function": "Authenticate",
+      "should": {
+        "return": "void"
+      },
+      "withParameter": [ "\"1\"" ],
+      "continueWith": [
+        {
+          "function": "Deposit",
+          "should": {
+            "return": "void"
+          },
+          "withParameter": [200]
+        },
+        {
+          "function": "CheckBalance",
+          "should": {
+            "return": "200"
+          },
+          "withParameter": []
+        },
+        {
+          "function": "Withdraw",
+          "should": {
+            "return": "void"
+          },
+          "withParameter": [100]
+        }
+      ]
+    }
+  ]
+}
