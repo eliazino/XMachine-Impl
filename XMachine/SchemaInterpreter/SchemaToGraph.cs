@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using examples.Support;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace XMachine.SchemaInterpreter {
     public class SchemaToGraph {
@@ -24,13 +25,14 @@ namespace XMachine.SchemaInterpreter {
             e.EdgeFormatter.StrokeGraphvizColor = GraphvizColor.LightYellow;
         }
 
-        public void createTransition() {
+        public Bitmap createTransition() {
             foreach(Transition transition in model.Transitions) {
                 Function function = model.Functions.Find(F => F.name == transition.function);
                 addEdgeWithCosts(transition.from, transition.to, functionStr(function));
             }
             _graph.Visualize(name, costEdgeFormatter);
-            viewImage();
+            Bitmap bm = new Bitmap(name+".jpg");
+            return bm;
         }
         private string functionStr(Function function) {
             string functionName = function.name+"(";

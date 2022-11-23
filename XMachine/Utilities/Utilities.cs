@@ -18,6 +18,17 @@ namespace XMachine.Utilities {
             Regex r = new Regex("^(?=.+\\d)(?=.+[a-zA-Z]).*$");
             return r.IsMatch(str);
         }
+        public static (bool valid, string message) isValidVariableName(string str) {
+            if (string.IsNullOrEmpty(str))
+                return (false, "Variable name cannot be null");
+            Regex r = new Regex("[a-zA-Z_]");
+            if (r.IsMatch(str[0].ToString()))
+                return (false, "Variable name must start with a letter or _");
+            r = new Regex("^[a-zA-Z_0-9]+$");
+            if (r.IsMatch(str.ToString()))
+                return (false, "Variable name must start with a letter or _ and should contain number afterwards");
+            return (true, "");
+        }
         public static bool isLettersAndNumber(string str) {
             if (string.IsNullOrEmpty(str))
                 return false;

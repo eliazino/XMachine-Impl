@@ -1,0 +1,58 @@
+﻿<Window x:Class="SXSMUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SXSMUI"
+		xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
+        mc:Ignorable="d"
+        Title="SXSM UI" Height="450" Width="800" WindowState="Maximized">
+	<DockPanel>
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="File">
+				<MenuItem x:Name="uploadSchemaBtn" Header="_Upload New Schema" Click="uploadSchemaBtn_Click" />
+				<Separator />
+				<MenuItem x:Name="closeBtn" Header="_Close" Click="closeBtn_Click" />
+			</MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Name="copyTestBtn" Header="Copy Test Result" IsEnabled="False" Click="copyTestBtn_Click" />
+				<MenuItem Name="downloadStateBtn" Header="Download State Diagram" IsEnabled="False" Click="downloadStateBtn_Click" />
+			</MenuItem>
+		</Menu>
+		<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="3*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<!-- Left Pane consists of Tree view and message pane-->
+				<TreeView x:Name="tView" Grid.Row="0" Margin="6" FontSize="16" Foreground="Blue">
+				</TreeView>
+				<TextBox Padding="6" Margin="6" BorderThickness="2" BorderBrush="#FFE8E8E8" Grid.Row="1" Name="statusText" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+					
+				</TextBox>
+			</Grid>
+			<Grid Grid.Column="1">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="2*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<!-- Right Pane consists of Code view and State Image-->
+				<Grid Grid.Row="0">
+					<Border BorderThickness="1" BorderBrush="#FFE8E8E8" Margin="6" Padding="6">
+						<mdxam:MarkdownScrollViewer x:Name="markdownview"/>
+					</Border>
+				</Grid>
+				<Grid Grid.Row="1" Margin="6">
+					<Border BorderThickness="1" BorderBrush="#FFE8E8E8">
+						<Image VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="stateImage"></Image>
+					</Border>					
+				</Grid>
+			</Grid>
+		</Grid>
+	</DockPanel>	
+</Window>
