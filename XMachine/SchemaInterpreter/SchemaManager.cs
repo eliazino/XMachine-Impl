@@ -37,19 +37,19 @@ namespace XMachine.SchemaInterpreter {
             List<Error> errors = new List<Error>();
             var t = validateSchemaChildren(model);
             errors.AddRange(t);
-            t.AddRange(validateProjectObj(model.Project));
-            t.AddRange(validateStateObj(model.State));
+            errors.AddRange(validateProjectObj(model.Project));
+            errors.AddRange(validateStateObj(model.State));
             if (model.Functions.Count < 1)
-                t.Add(new Error { error = "Schema.Functions must define at least 1 method." });
+                errors.Add(new Error { error = "Schema.Functions must define at least 1 method." });
             foreach (Function f in model.Functions) {
-                t.AddRange(validateFunctionObj(f));
+                errors.AddRange(validateFunctionObj(f));
             }
             if (model.Transitions.Count < 1)
-                t.Add(new Error { error = "Schema.Transitions must define at least 1 Transition." });
+                errors.Add(new Error { error = "Schema.Transitions must define at least 1 Transition." });
             List<string> states = getStates(model.State?.values);
             List<Function> functions = model.Functions ?? new List<Function>();
             foreach (Transition f in model.Transitions) {
-                t.AddRange(validateTransitionsbj(f, states, functions));
+                errors.AddRange(validateTransitionsbj(f, states, functions));
             }
             return errors;
         }
