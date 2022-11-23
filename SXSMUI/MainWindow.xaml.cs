@@ -13,6 +13,7 @@ using XMachine.SchemaInterpreter;
 using System.Windows;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace SXSMUI {
     /// <summary>
@@ -20,6 +21,7 @@ namespace SXSMUI {
     /// </summary>
     public partial class MainWindow : Window {
         private string testDetails;
+        private Bitmap stateDiag;
         public MainWindow() {
             InitializeComponent();
         }
@@ -128,6 +130,7 @@ namespace SXSMUI {
             stateImage.Source = bitmapToImageSource(bm);
         }
         private BitmapImage bitmapToImageSource(Bitmap bitmap) {
+            this.stateDiag = bitmap;
             using (MemoryStream memory = new MemoryStream()) {
                 bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
                 memory.Position = 0;
@@ -152,10 +155,17 @@ namespace SXSMUI {
 
         private void copyTestBtn_Click(object sender, RoutedEventArgs e) {
             Clipboard.SetText(testDetails);
+            statusText.Text += "\nTest copied to clipboard";
         }
 
         private void downloadStateBtn_Click(object sender, RoutedEventArgs e) {
-
+            SaveFileDialog dialog = new SaveFileDialog() {
+                Filter = "JPG Files(*.jpg)|*.jpg|All(*.*)|*"
+            };
+            if (dialog.ShowDialog() == true) {
+                stateDiag.Save(dialog.FileName);
+                statusText.Text += "\nState Image saved to " + dialog.FileName;
+            }
         }
     }
 }
