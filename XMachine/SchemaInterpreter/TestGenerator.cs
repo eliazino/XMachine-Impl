@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace XMachine.SchemaInterpreter {
-    internal class TestGenerator {
+    public class TestGenerator {
         private StringBuilder testFile;
         private readonly TestModel testModel;
         public TestGenerator(TestModel testModel) {
             testFile = new StringBuilder();
             this.testModel = testModel;
             testFile.Append("using NUnit.Framework;\nusing System;\n");
-            testFile.Append("namespace Core.Test {\n[TestFixture]\n");
+            testFile.Append("namespace "+testModel.Project.name+".Test {\n[TestFixture]\n");
             testFile.Append("public class "+testModel.Project.name+"_TEST {\n");
             createSetup();
         }
@@ -26,7 +26,7 @@ namespace XMachine.SchemaInterpreter {
             } else {
                 testFile.Append("this.testJig = new " + testModel.Project.name);
             }
-            testFile.Append("("+testModel.Project.constructorValue+"); \n}");
+            testFile.Append("("+testModel.Project.constructorValue+"); \n}\n");
         }
         private string confirmInitialState() {
             string testCase = string.Concat("Assert.That(this.testJig.", this.testModel.State.memoryName,  ", Is.EqualTo(", this.testModel.State.type ,".", this.testModel.State.initialValue, "), \"The initial State must be "+this.testModel.State.initialValue+" \");");
@@ -58,7 +58,7 @@ namespace XMachine.SchemaInterpreter {
         public string generateTestFile() {
             this.testFile.Append(confirmInitialState()+"\n");
             this.testFile.Append(generateTestCases());
-            this.testFile.Append("\n\n}}");
+            this.testFile.Append("\n\n}\n}\n");
             return testFile.ToString();
         }
 
@@ -86,7 +86,7 @@ namespace XMachine.SchemaInterpreter {
             builder.Append("[TestCase]\n");
             builder.Append("public void " + functionName + "() {\n");
             builder.Append(body+" \n");
-            builder.Append("}");
+            builder.Append("}\n");
             return builder.ToString();
         }
         private string getParameters(string[] param) {
