@@ -8,9 +8,9 @@ namespace XMachine.SchemaInterpreter {
     public class TestModel {
         public ProjectDetails Project { get; set; }
         public State State { get; set; }
-        public List<Function> Functions { get; set; }
-        public List<Transition> Transitions { get; set; }
-        public List<TestParameter> TestParameters { get; set; }
+        public List<Function> Functions { get; set; } = new List<Function>();
+        public List<Transition> Transitions { get; set; } = new List<Transition>();
+        public List<TestParameter> TestParameters { get; set; } = new List<TestParameter>();
     }
     public class ProjectDetails {
         public string name { get; set; }
