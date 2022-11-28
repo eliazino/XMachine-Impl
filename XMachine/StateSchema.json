@@ -137,7 +137,7 @@
           "should": {
             "return": "void"
           },
-          "withParameter": [200]
+          "withParameter": [ 200 ]
         },
         {
           "function": "CheckBalance",
@@ -151,7 +151,30 @@
           "should": {
             "return": "void"
           },
-          "withParameter": [100]
+          "withParameter": [ 100 ]
+        },
+        {
+          "function": "CheckBalance",
+          "should": {
+            "return": "100"
+          },
+          "withParameter": []
+        }
+      ]
+    },
+    {
+      "function": "Authenticate",
+      "should": {
+        "return": "void"
+      },
+      "withParameter": [ "\"1\"" ],
+      "continueWith": [
+        {
+          "function": "Withdraw",
+          "should": {
+            "throw": true
+          },
+          "withParameter": [ 100 ]
         }
       ]
     }
