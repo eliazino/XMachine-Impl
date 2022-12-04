@@ -15,6 +15,9 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using XMachine.Utilities;
+using static ICSharpCode.AvalonEdit.Document.TextDocumentWeakEventManager;
+using static System.Net.WebRequestMethods;
+using System.Xml.Linq;
 
 namespace SXSMUI {
     /// <summary>
@@ -23,10 +26,41 @@ namespace SXSMUI {
     public partial class MainWindow : Window {
         private string testDetails;
         private Bitmap stateDiag;
+        private string imageName;
+        private JObject schemaObj;
+        private string workingPath = "c:\\SXSMUI\\imfiles";
+        private FileSystemWatcher watcher;
         public MainWindow() {
             InitializeComponent();
         }
-        private JObject schemaObj;
+        private void fileWatcher() {
+            watcher.NotifyFilter = NotifyFilters.Attributes
+                             | NotifyFilters.CreationTime
+                             | NotifyFilters.DirectoryName
+                             | NotifyFilters.FileName
+                             | NotifyFilters.LastAccess
+                             | NotifyFilters.LastWrite
+                             | NotifyFilters.Security
+                             | NotifyFilters.Size;
+            watcher.Filter = "*.jpg";
+            watcher.Changed += loadImage;
+            watcher.Created += loadImage;
+            watcher.IncludeSubdirectories = true;
+            watcher.EnableRaisingEvents = true;
+        }
+        private void loadImage(object sender, FileSystemEventArgs e) {
+            try {
+                Bitmap bm = new Bitmap(e.FullPath);
+                this.Dispatcher.Invoke(() =>
+                {
+                    stateImage.Source = bitmapToImageSource(bm);
+                });                
+            } catch {
+                this.Dispatcher.Invoke(() => {
+                    statusText.Text += "\n Could not load file "+e?.FullPath;
+                });
+            }            
+        }
         public static TreeViewItem Json2Tree(JObject root, string rootName = "") {
             var parent = new TreeViewItem() { Header = rootName, IsExpanded = true };
             var type = root.Type;
@@ -125,10 +159,10 @@ namespace SXSMUI {
             copyTestBtn.IsEnabled = false;
             downloadStateBtn.IsEnabled = false;
         }
-        private void loadImage(TestModel data) {
-            SchemaToGraph graph = new SchemaToGraph(data, Utilities.genID(12, 2));
+        private void loadImage(TestModel data) {            
+            this.imageName = workingPath + "\\" + Utilities.genID(12, 2);
+            SchemaToGraph graph = new SchemaToGraph(data, this.imageName);
             var bm = graph.createTransition();
-            stateImage.Source = bitmapToImageSource(bm);
         }
         private BitmapImage bitmapToImageSource(Bitmap bitmap) {
             this.stateDiag = bitmap;
@@ -151,7 +185,7 @@ namespace SXSMUI {
         }
 
         private void closeBtn_Click(object sender, RoutedEventArgs e) {
-
+            
         }
 
         private void copyTestBtn_Click(object sender, RoutedEventArgs e) {
@@ -167,6 +201,14 @@ namespace SXSMUI {
                 stateDiag.Save(dialog.FileName);
                 statusText.Text += "\nState Image saved to " + dialog.FileName;
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            if (!Directory.Exists(workingPath)) {
+                Directory.CreateDirectory(workingPath);
+            }
+            watcher = new FileSystemWatcher(workingPath);
+            fileWatcher();
         }
     }
 }
