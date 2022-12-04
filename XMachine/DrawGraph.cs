@@ -15,14 +15,15 @@ namespace examples.Support {
             Visualize(graph, fileName, NoOpEdgeFormatter, dir);
         }
 
-        public static void Visualize<TVertex, TEdge>(this IVertexAndEdgeListGraph<TVertex, TEdge> graph,
+        public static bool Visualize<TVertex, TEdge>(this IVertexAndEdgeListGraph<TVertex, TEdge> graph,
             string fileName, FormatEdgeAction<TVertex, TEdge> edgeFormatter, string dir = "")
             where TEdge : IEdge<TVertex> {
             var fullFileName = Path.Combine(dir, fileName);
             var viz = new GraphvizAlgorithm<TVertex, TEdge>(graph);
             viz.FormatVertex += VizFormatVertex;
             viz.FormatEdge += edgeFormatter;
-            viz.Generate(new FileDotEngine(), fullFileName);
+            string c = viz.Generate(new FileDotEngine(), fullFileName);
+            return true;
         }
 
         static void NoOpEdgeFormatter<TVertex, TEdge>(object sender, FormatEdgeEventArgs<TVertex, TEdge> e)

@@ -25,14 +25,14 @@ namespace XMachine.SchemaInterpreter {
             e.EdgeFormatter.StrokeGraphvizColor = GraphvizColor.LightYellow;
         }
 
-        public Bitmap createTransition() {
+        public string createTransition() {
             foreach(Transition transition in model.Transitions) {
                 Function function = model.Functions.Find(F => F.name == transition.function);
                 addEdgeWithCosts(transition.from, transition.to, functionStr(function));
             }
+            var file = name + ".jpg";
             _graph.Visualize(name, costEdgeFormatter);
-            Bitmap bm = new Bitmap(name+".jpg");
-            return bm;
+            return file;
         }
         private string functionStr(Function function) {
             string functionName = function.name+"(";
