@@ -6,7 +6,7 @@
   },
   "State": {
     "type": "SYSTEM_STATUS",
-    "values": "IDLE, SESSION_START, WITHDRAWAL, CHECK_BALANCE, DEPOSIT, TRANSFER, NONE",
+    "values": "IDLE, SESSION_START, WDRWL, CHECK_BALANCE, DEPOSIT, TRANSFER, NONE",
     "memoryName": "status",
     "initialValue": "IDLE"
   },
@@ -69,7 +69,7 @@
     {
       "from": "SESSION_START",
       "function": "Withdraw",
-      "to": "WITHDRAWAL"
+      "to": "WDRWL"
     },
     {
       "from": "SESSION_START",
@@ -87,12 +87,12 @@
       "to": "IDLE"
     },
     {
-      "from": "WITHDRAWAL",
+      "from": "WDRWL",
       "function": "Cancel",
       "to": "IDLE"
     },
     {
-      "from": "WITHDRAWAL",
+      "from": "WDRWL",
       "function": "Accept",
       "to": "SESSION_START"
     },

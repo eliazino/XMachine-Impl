@@ -14,6 +14,7 @@ using System.Windows;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using XMachine.Utilities;
 
 namespace SXSMUI {
     /// <summary>
@@ -125,7 +126,7 @@ namespace SXSMUI {
             downloadStateBtn.IsEnabled = false;
         }
         private void loadImage(TestModel data) {
-            SchemaToGraph graph = new SchemaToGraph(data, data.Project.name);
+            SchemaToGraph graph = new SchemaToGraph(data, Utilities.genID(12, 2));
             var bm = graph.createTransition();
             stateImage.Source = bitmapToImageSource(bm);
         }
