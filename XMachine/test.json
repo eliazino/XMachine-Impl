@@ -1,0 +1,235 @@
+{
+  "Project": {
+    "name": "OnlineShop",
+    "typeIstatic": false,
+    "constructorValue": ""
+  },
+  "State": {
+    "type": "SYSTEM_STATUS",
+    "values": "IDLE, AUTHENTICATED, VIEW_PROFILE, SEARCH_ITEM, VIEW_ITEM, ADD_CART, VIEW_CART, CONFIRM, PAYMENT",
+    "memoryName": "status",
+    "initialValue": "IDLE"
+  },
+  "Functions": [
+    {
+      "name": "Authenticate",
+      "args": [
+        {
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "name": "password",
+          "type": "string"
+        }
+      ],
+      "output": "bool"
+    },
+    {
+      "name": "Register",
+      "args": [
+        {
+          "name": "fullname",
+          "type": "string"
+        },
+        {
+          "name": "username",
+          "type": "string"
+        },
+        {
+          "name": "password",
+          "type": "string"
+        }
+      ],
+      "output": "bool"
+    },
+    {
+      "name": "ViewProfile",
+      "args": [
+      ],
+      "output": "Profile"
+    },
+    {
+      "name": "Search",
+      "args": [
+        {
+          "name": "query",
+          "type": "string"
+        }
+      ],
+      "output": "List<Items>"
+    },
+    {
+      "name": "ViewItem",
+      "args": [
+        {
+          "name": "itemID",
+          "type": "long"
+        }
+      ],
+      "output": "Item"
+    },
+    {
+      "name": "AddtoCart",
+      "args": [
+        {
+          "name": "itemID",
+          "type": "long"
+        }
+      ],
+      "output": "bool"
+    },
+    {
+      "name": "ViewCart",
+      "args": [
+      ],
+      "output": "List<Carts>"
+    },
+    {
+      "name": "Confirm",
+      "args": [
+        {
+          "name": "items",
+          "type": "List<long>"
+        }
+      ],
+      "output": "bool"
+    },
+    {
+      "name": "Payment",
+      "args": [
+        {
+          "name": "transactionID",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "double"
+        }
+      ],
+      "output": "bool"
+    }
+  ],
+  "Transitions": [
+    {
+      "from": "IDLE",
+      "function": "Authenticate",
+      "to": "AUTHENTICATED"
+    },
+    {
+      "from": "IDLE",
+      "function": "Register",
+      "to": "AUTHENTICATED"
+    },
+    {
+      "from": "AUTHENTICATED",
+      "function": "ViewProfile",
+      "to": "VIEW_PROFILE"
+    },
+    {
+      "from": "AUTHENTICATED",
+      "function": "Search",
+      "to": "SEARCH_ITEM"
+    },
+    {
+      "from": "SEARCH_ITEM",
+      "function": "ViewItem",
+      "to": "VIEW_ITEM"
+    },
+    {
+      "from": "VIEW_ITEM",
+      "function": "AddtoCart",
+      "to": "ADD_CART"
+    },
+    {
+      "from": "AUTHENTICATED",
+      "function": "ViewCart",
+      "to": "VIEW_CART"
+    },
+    {
+      "from": "ADD_CART",
+      "function": "ViewCart",
+      "to": "VIEW_CART"
+    },
+    {
+      "from": "VIEW_CART",
+      "function": "Confirm",
+      "to": "CONFIRM"
+    },
+    {
+      "from": "CONFIRM",
+      "function": "Payment",
+      "to": "PAYMENT"
+    }
+  ],
+  "TestParameters": [
+    {
+      "function": "Authenticate",
+      "withParameter": [ null, null ],
+      "should": {
+        "throw": "true"
+      }
+    },
+    {
+      "function": "Authenticate",
+      "withParameter": [ "\"test\"", "\"test\"" ],
+      "should": {
+        "throw": "false",
+        "return": "false"
+      }
+    },
+    {
+      "function": "Authenticate",
+      "should": {
+        "return": "true"
+      },
+      "withParameter": [ "\"user01\"", "\"userPassword\"" ],
+      "continueWith": [
+        {
+          "function": "ViewProfile",
+          "should": {
+            "return": "Profile"
+          },
+          "withParameter": []
+        },
+        {
+          "function": "CheckBalance",
+          "should": {
+            "return": "200"
+          },
+          "withParameter": []
+        },
+        {
+          "function": "Withdraw",
+          "should": {
+            "return": "void"
+          },
+          "withParameter": [ 100 ]
+        },
+        {
+          "function": "CheckBalance",
+          "should": {
+            "return": "100"
+          },
+          "withParameter": []
+        }
+      ]
+    },
+    {
+      "function": "Authenticate",
+      "should": {
+        "return": "void"
+      },
+      "withParameter": [ "\"1\"" ],
+      "continueWith": [
+        {
+          "function": "Withdraw",
+          "should": {
+            "throw": true
+          },
+          "withParameter": [ 100 ]
+        }
+      ]
+    }
+  ]
+}

@@ -45,7 +45,16 @@ namespace XMachine.SchemaInterpreter {
                 } else {
                     string randomName = "result_" + Utilities.Utilities.genID(7);
                     builder.Append("var " + randomName + " = this.testJig." + test.function + "(" + arg + ");\n");
-                    builder.Append("Assert.That(" + randomName + ", Is.EqualTo(" + test.should.@return + "), \"" + functionName + "\"); \n");
+                    if (test.should.@return.StartsWith("typeof(")) {
+                        string randomNameType = "result_Type_" + Utilities.Utilities.genID(7);
+                        builder.Append("Type "+ randomNameType + " = " + randomName + ".GetType();\n");
+                        builder.Append("Assert.That("+ randomNameType + ", Is.EqualTo(" + test.should.@return + "), \"" + functionName + "\"); \n");
+                    } else {
+                        builder.Append("Assert.That(" + randomName + ", Is.EqualTo(" + test.should.@return + "), \"" + functionName + "\"); \n");
+                    }
+                    if (test.should.propertyOf != default(PropertyCriteria)) {
+                        builder.Append("Assert.That(" + randomName + "."+test.should.propertyOf.name+", Is.EqualTo(" + test.should.propertyOf.value + "), \"" + functionName + "\"); \n");
+                    }
                 }
                 var nextState = getNextState(test.function, this.testModel.State.type);
                 builder.Append("Assert.IsTrue(new List<" + this.testModel.State.type + ">(){" + nextState + "}.Contains(this.testJig."+this.testModel.State.memoryName+"), \" this.testJig."+this.testModel.State.memoryName+" Must be the Final State\");\n");

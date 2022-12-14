@@ -46,5 +46,10 @@ namespace XMachine.SchemaInterpreter {
     public class ShouldExpect {
         public string @return { get; set; }
         public bool @throw { get; set; } = false;
+        public PropertyCriteria propertyOf { get; set; }
+    }
+    public class PropertyCriteria {
+        public string name { get; set; }
+        public string value { get; set; }
     }
 }
